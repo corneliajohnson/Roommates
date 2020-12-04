@@ -130,12 +130,16 @@ namespace Roommates.Repositories
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    RoommateChore roommateChore = new RoommateChore();
+                    RoommateChore roommateChore = new RoommateChore()
+                    {
+                        RoommateId = roommateId,
+                        ChoreId = choreId
+                    };
                     cmd.CommandText = @" INSERT INTO RoommateChore(ChoreId, RoommateId)
                                          OUTPUT INSERTED.Id 
                                          VALUES (@choreId, @roommateId)";
-                    cmd.Parameters.AddWithValue("@choreId", roommateId);
-                    cmd.Parameters.AddWithValue("@roommateId", choreId);
+                    cmd.Parameters.AddWithValue("@choreId",roommateChore.RoommateId);
+                    cmd.Parameters.AddWithValue("@roommateId", roommateChore.ChoreId);
                     int id = (int)cmd.ExecuteScalar();
                     roommateChore.Id = id;
                 }
