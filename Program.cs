@@ -151,22 +151,33 @@ namespace Roommates
 
         static void AddRoom(RoomRepository roomRepo)
         {
-            Console.Write("Room name: ");
-            string name = Console.ReadLine();
-
-            Console.Write("Max occupancy: ");
-            int max = int.Parse(Console.ReadLine());
-
-            Room roomToAdd = new Room()
+            while (true)
             {
-                Name = name,
-                MaxOccupancy = max
-            };
+                try
+                {
+                    Console.Write("Room name: ");
+                    string name = Console.ReadLine();
 
-            roomRepo.Insert(roomToAdd);
+                    Console.Write("Max occupancy: ");
+                    int max = int.Parse(Console.ReadLine());
 
-            Console.WriteLine($"{roomToAdd.Name} has been added and assigned an Id of {roomToAdd.Id}");
-            ContinueMenu();
+                    Room roomToAdd = new Room()
+                    {
+                        Name = name,
+                        MaxOccupancy = max
+                    };
+
+                    roomRepo.Insert(roomToAdd);
+
+                    Console.WriteLine($"{roomToAdd.Name} has been added and assigned an Id of {roomToAdd.Id}");
+                    ContinueMenu();
+                    break;
+                }
+                catch
+                {
+                    continue;
+                }
+            }
         }
 
         static void ShowAllChores(ChoreRepository choreRepo)
