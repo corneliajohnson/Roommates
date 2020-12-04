@@ -61,6 +61,9 @@ namespace Roommates
                     case ("Update Chore"):
                         UpdateChore(choreRepo);
                         break;
+                    case ("Delete Chore"):
+                        DeleteChore(choreRepo);
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -87,6 +90,7 @@ namespace Roommates
             "Update a room",
             "Delete a room",
             "Update Chore",
+            "Delete Chore",
             "Exit"
         };
 
@@ -222,8 +226,6 @@ namespace Roommates
 
         static void AddChore(ChoreRepository choreRepo)
         {
-            while (true)
-            {
                     Console.Write("Chore name: ");
                     string name = Console.ReadLine();
 
@@ -235,7 +237,6 @@ namespace Roommates
                     choreRepo.Insert(choreToAdd);
                     Console.WriteLine($"{choreToAdd.Name} has been added and assigned an Id of {choreToAdd.Id}");
                     ContinueMenu();
-            }
         }
 
         static void SearchRoommate(RoommateRepository roommateRepo)
@@ -351,6 +352,16 @@ namespace Roommates
 
             choreRepo.Update(selectedChore);
             Console.WriteLine($"Chore has been successfully updated");
+            ContinueMenu();
+        }
+
+        static void DeleteChore(ChoreRepository choreRepo)
+        {
+            List<Chore> chores = choreRepo.GetAll();
+            chores.ForEach(c => Console.WriteLine($"{c.Id} - {c.Name}"));
+            Console.Write("Which chore would you like to delete? ");
+            int selectedChoreId = int.Parse(Console.ReadLine());
+            choreRepo.Delete(selectedChoreId);
             ContinueMenu();
         }
 
