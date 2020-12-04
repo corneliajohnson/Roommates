@@ -192,12 +192,28 @@ namespace Roommates
 
         static void SearchChore(ChoreRepository choreRepo)
         {
-            Console.Write("Chore Id: ");
-            int id = int.Parse(Console.ReadLine());
-            Chore chore = choreRepo.GetChoreById(id);
+            while (true)
+            {
+                try
+                {
+                    Console.Write("Chore Id: ");
+                    int id = int.Parse(Console.ReadLine());
+                    Chore chore = choreRepo.GetChoreById(id);
 
-            Console.WriteLine($"{chore.Id} - {chore.Name}");
-            ContinueMenu();
+                    if (chore == null)
+                    {
+                        throw new Exception();
+                    }
+
+                    Console.WriteLine($"{chore.Id} - {chore.Name}");
+                    ContinueMenu();
+                    break;
+                }
+                catch
+                {
+                    continue;
+                }
+            }
         }
 
         static void AddChore(ChoreRepository choreRepo)
