@@ -58,6 +58,9 @@ namespace Roommates
                     case ("Delete a room"):
                         DeleteRoom(roomRepo);
                         break;
+                    case ("Update Chore"):
+                        UpdateChore(choreRepo);
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -83,6 +86,7 @@ namespace Roommates
             "Assign roommate to chore",
             "Update a room",
             "Delete a room",
+            "Update Chore",
             "Exit"
         };
 
@@ -218,28 +222,46 @@ namespace Roommates
 
         static void AddChore(ChoreRepository choreRepo)
         {
-            Console.Write("Chore name: ");
-            string name = Console.ReadLine();
-
-            Chore choreToAdd = new Chore()
+            while (true)
             {
-                Name = name
-            };
+                    Console.Write("Chore name: ");
+                    string name = Console.ReadLine();
 
-            choreRepo.Insert(choreToAdd);
-            Console.WriteLine($"{choreToAdd.Name} has been added and assigned an Id of {choreToAdd.Id}");
-            ContinueMenu();
+                    Chore choreToAdd = new Chore()
+                    {
+                        Name = name
+                    };
+
+                    choreRepo.Insert(choreToAdd);
+                    Console.WriteLine($"{choreToAdd.Name} has been added and assigned an Id of {choreToAdd.Id}");
+                    ContinueMenu();
+            }
         }
 
         static void SearchRoommate(RoommateRepository roommateRepo)
         {
-            Console.Write("Roommate Id: ");
-            int id = int.Parse(Console.ReadLine());
-            Roommate roommate = roommateRepo.GetById(id);
+            while (true)
+            {
+                try
+                {
+                    Console.Write("Roommate Id: ");
+                    int id = int.Parse(Console.ReadLine());
+                    Roommate roommate = roommateRepo.GetById(id);
+                    
+                    if(roommate == null)
+                    {
+                        throw new Exception();
+                    }
 
-
-            Console.WriteLine($"{roommate.Firstname}'s rent portion is ${roommate.RentPortion}, occupies {roommate.Room.Name}.");
-            ContinueMenu();
+                    Console.WriteLine($"{roommate.Firstname}'s rent portion is ${roommate.RentPortion}, occupies {roommate.Room.Name}.");
+                    ContinueMenu();
+                    break;
+                }
+                catch
+                {
+                    continue;
+                }
+            }
         }
 
         static void ShowUnassignedChores(ChoreRepository choreRepo)
@@ -273,10 +295,10 @@ namespace Roommates
             Console.Write("Enter roommate Id: ");
             int roommateId = int.Parse(Console.ReadLine());
 
-            choreRepo.AssignChore(roommateId, choreId);
-
             Chore selectedChore = chores.Find(c => c.Id == choreId);
             Roommate selectedRoommate = roommates.Find(r => r.Id == roommateId);
+
+            choreRepo.AssignChore(roommateId, choreId);
             Console.WriteLine($"{selectedRoommate.Firstname} is assign to {selectedChore.Name}");
             ContinueMenu();
         }
@@ -312,6 +334,23 @@ namespace Roommates
             Console.Write("Which room would you like to delete? ");
             int selectedRoomId = int.Parse(Console.ReadLine());
             roomRepo.Delete(selectedRoomId);
+            ContinueMenu();
+        }
+
+        static void UpdateChore (ChoreRepository choreRepo)
+        {
+            List<Chore> chores = choreRepo.GetAll();
+            chores.ForEach(c => Console.WriteLine($"{c.Id} - {c.Name}"));
+
+            Console.Write("Which chore would you like to update? ");
+            int selectedChoreId = int.Parse(Console.ReadLine());
+            Chore selectedChore = chores.FirstOrDefault(c => c.Id == selectedChoreId);
+
+            Console.Write("New Chore Name: ");
+            selectedChore.Name = Console.ReadLine();
+
+            choreRepo.Update(selectedChore);
+            Console.WriteLine($"Chore has been successfully updated");
             ContinueMenu();
         }
 
