@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Roommates.Repositories;
 using Roommates.Models;
+using System.Linq;
 
 namespace Roommates
 {
@@ -51,6 +52,9 @@ namespace Roommates
                     case ("Assign roommate to chore"):
                         AssignRoommateChore(choreRepo, roommateRepo);
                         break;
+                    case ("Update a room"):
+                        UpdateRoom(roomRepo);
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -73,7 +77,8 @@ namespace Roommates
             "Add a chore",
             "Search for roommate",
             "Show unassigned chores",
-            "Assign roommate to chore", 
+            "Assign roommate to chore",
+            "Update a room",
             "Exit"
         };
 
@@ -225,6 +230,30 @@ namespace Roommates
             Chore selectedChore = chores.Find(c => c.Id == choreId);
             Roommate selectedRoommate = roommates.Find(r => r.Id == roommateId);
             Console.WriteLine($"{selectedRoommate.Firstname} is assign to {selectedChore.Name}");
+            Continue();
+        }
+
+        static void UpdateRoom (RoomRepository roomRepo)
+        {
+            List<Room> roomOptions = roomRepo.GetAll();
+            foreach (Room r in roomOptions)
+            {
+                Console.WriteLine($"{r.Id} - {r.Name} Max Occupancy({r.MaxOccupancy})");
+            }
+
+            Console.Write("Which room would you like to update? ");
+            int selectedRoomId = int.Parse(Console.ReadLine());
+            Room selectedRoom = roomOptions.FirstOrDefault(r => r.Id == selectedRoomId);
+
+            Console.Write("New Name: ");
+            selectedRoom.Name = Console.ReadLine();
+
+            Console.Write("New Max Occupancy: ");
+            selectedRoom.MaxOccupancy = int.Parse(Console.ReadLine());
+
+            roomRepo.Update(selectedRoom);
+
+            Console.WriteLine($"Room has been successfully updated");
             Continue();
         }
 
