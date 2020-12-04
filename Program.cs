@@ -118,18 +118,35 @@ namespace Roommates
             {
                 Console.WriteLine($"{r.Id} - {r.Name} Max Occupancy({r.MaxOccupancy})");
             }
-            Continue();
+            ContinueMenu();
         }
 
         static void SearchRoom(RoomRepository roomRepo)
         {
-            Console.Write("Room Id: ");
-            int id = int.Parse(Console.ReadLine());
+            while(true)
+            {
+                try
+                {
+                    Console.Write("Room Id: ");
+                    int id = int.Parse(Console.ReadLine());
 
-            Room room = roomRepo.GetById(id);
+                    Room room = roomRepo.GetById(id);
 
-            Console.WriteLine($"{room.Id} - {room.Name} Max Occupancy({room.MaxOccupancy})");
-            Continue();
+                    if(room == null)
+                    {
+                        throw new Exception();
+                    } 
+                        Console.WriteLine($"{room.Id} - {room.Name} Max Occupancy({room.MaxOccupancy})");
+                        ContinueMenu();
+                    break;
+
+                }
+                catch (Exception)
+                {
+
+                    continue;
+                }
+            }
         }
 
         static void AddRoom(RoomRepository roomRepo)
@@ -149,7 +166,7 @@ namespace Roommates
             roomRepo.Insert(roomToAdd);
 
             Console.WriteLine($"{roomToAdd.Name} has been added and assigned an Id of {roomToAdd.Id}");
-            Continue();
+            ContinueMenu();
         }
 
         static void ShowAllChores(ChoreRepository choreRepo)
@@ -159,7 +176,7 @@ namespace Roommates
             {
                 Console.WriteLine($"{c.Id} - {c.Name}");
             }
-            Continue();
+            ContinueMenu();
         }
 
         static void SearchChore(ChoreRepository choreRepo)
@@ -169,7 +186,7 @@ namespace Roommates
             Chore chore = choreRepo.GetChoreById(id);
 
             Console.WriteLine($"{chore.Id} - {chore.Name}");
-            Continue();
+            ContinueMenu();
         }
 
         static void AddChore(ChoreRepository choreRepo)
@@ -184,7 +201,7 @@ namespace Roommates
 
             choreRepo.Insert(choreToAdd);
             Console.WriteLine($"{choreToAdd.Name} has been added and assigned an Id of {choreToAdd.Id}");
-            Continue();
+            ContinueMenu();
         }
 
         static void SearchRoommate(RoommateRepository roommateRepo)
@@ -195,7 +212,7 @@ namespace Roommates
 
 
             Console.WriteLine($"{roommate.Firstname}'s rent portion is ${roommate.RentPortion}, occupies {roommate.Room.Name}.");
-            Continue();
+            ContinueMenu();
         }
 
         static void ShowUnassignedChores(ChoreRepository choreRepo)
@@ -205,7 +222,7 @@ namespace Roommates
             {
                 Console.WriteLine($"{c.Name}");
             }
-            Continue();
+            ContinueMenu();
         }
 
         static void AssignRoommateChore(ChoreRepository choreRepo, RoommateRepository roommateRepo)
@@ -234,7 +251,7 @@ namespace Roommates
             Chore selectedChore = chores.Find(c => c.Id == choreId);
             Roommate selectedRoommate = roommates.Find(r => r.Id == roommateId);
             Console.WriteLine($"{selectedRoommate.Firstname} is assign to {selectedChore.Name}");
-            Continue();
+            ContinueMenu();
         }
 
         static void UpdateRoom (RoomRepository roomRepo)
@@ -258,7 +275,7 @@ namespace Roommates
             roomRepo.Update(selectedRoom);
 
             Console.WriteLine($"Room has been successfully updated");
-            Continue();
+            ContinueMenu();
         }
 
         static void DeleteRoom (RoomRepository roomRepo)
@@ -268,10 +285,10 @@ namespace Roommates
             Console.Write("Which room would you like to delete? ");
             int selectedRoomId = int.Parse(Console.ReadLine());
             roomRepo.Delete(selectedRoomId);
-            Continue();
+            ContinueMenu();
         }
 
-        static void Continue()
+        static void ContinueMenu()
         {
             Console.Write("Press any key to continue");
             Console.ReadKey();
