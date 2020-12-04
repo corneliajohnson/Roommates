@@ -55,6 +55,9 @@ namespace Roommates
                     case ("Update a room"):
                         UpdateRoom(roomRepo);
                         break;
+                    case ("Delete a room"):
+                        DeleteRoom(roomRepo);
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -79,6 +82,7 @@ namespace Roommates
             "Show unassigned chores",
             "Assign roommate to chore",
             "Update a room",
+            "Delete a room",
             "Exit"
         };
 
@@ -254,6 +258,16 @@ namespace Roommates
             roomRepo.Update(selectedRoom);
 
             Console.WriteLine($"Room has been successfully updated");
+            Continue();
+        }
+
+        static void DeleteRoom (RoomRepository roomRepo)
+        {
+            List<Room> roomOptions = roomRepo.GetAll();
+            roomOptions.ForEach(r => Console.WriteLine($"{r.Id} - {r.Name} Max Occupancy({r.MaxOccupancy})"));
+            Console.Write("Which room would you like to delete? ");
+            int selectedRoomId = int.Parse(Console.ReadLine());
+            roomRepo.Delete(selectedRoomId);
             Continue();
         }
 
