@@ -64,6 +64,9 @@ namespace Roommates
                     case ("Delete Chore"):
                         DeleteChore(choreRepo);
                         break;
+                    case ("Show Roommate Chore Count"):
+                        ShowChoreCount(choreRepo);
+                        break;
                     case ("Exit"):
                         runProgram = false;
                         break;
@@ -91,6 +94,7 @@ namespace Roommates
             "Delete a room",
             "Update Chore",
             "Delete Chore",
+            "Show Roommate Chore Count",
             "Exit"
         };
 
@@ -362,6 +366,14 @@ namespace Roommates
             Console.Write("Which chore would you like to delete? ");
             int selectedChoreId = int.Parse(Console.ReadLine());
             choreRepo.Delete(selectedChoreId);
+            ContinueMenu();
+        }
+
+        static void ShowChoreCount(ChoreRepository choreRepo)
+        {
+            List<RoommateChoreCount> roommateChoreCounts = choreRepo.ChoreCount();
+            roommateChoreCounts.ForEach(r => Console.WriteLine($"{r.FirstName}: {r.NumOfChores}"));
+
             ContinueMenu();
         }
 
